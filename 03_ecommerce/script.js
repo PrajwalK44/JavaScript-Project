@@ -5,15 +5,15 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: 3, name: "Product 3", price: 59.99 },
   ];
 
-  let cart = []; // Changed to let
-
+  let cart = JSON.parse(localStorage.getItem("cart")) || []; 
+  
   const productList = document.getElementById("product-list");
   const cartItems = document.getElementById("cart-items");
   const emptyCartMessage = document.getElementById("empty-cart");
   const cartTotal = document.getElementById("cart-total");
   const totalPrice = document.getElementById("total-price");
   const checkoutBtn = document.getElementById("checkout-btn");
-
+  renderCart();
   products.forEach((product) => {
     const productDiv = document.createElement("div");
     productDiv.classList.add("product");
@@ -29,11 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const productId = parseInt(e.target.getAttribute("data-id"));
       const product = products.find((p) => p.id === productId);
       addToCart(product);
+      saveProducts()
     }
   });
 
   function addToCart(product) {
     cart.push(product);
+    saveProducts()
     renderCart();
   }
 
@@ -43,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const productId = parseInt(e.target.getAttribute('data-id'));
       cart = cart.filter((c) => c.id !== productId);
       renderCart();
+      saveProducts();
     }
   });
 
@@ -77,4 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("Checkout successful");
     renderCart();
   });
+
+  function saveProducts() {
+    localStorage.setItem("cart", JSON.stringify(cart))
+  }
 });
